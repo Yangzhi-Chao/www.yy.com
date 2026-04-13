@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>管理员后台 - 订单管理</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .box{background:white; padding:20px; border-radius:10px; margin-bottom:10px; border:1px solid #ddd;}
+    h1,h2{color:#333;}
+    .order{padding:15px; background:#f9f9f9; border-left:4px solid #1677ff; margin-bottom:10px;}
+  </style>
+</head>
+<body>
+
+  <h1>管理员后台 - 订单管理</h1>
+  <div class="box">
+    <h2>订单列表</h2>
+    <div id="orderList"></div>
+  </div>
+
+  <script>
+ const PASSWORD = "123456";//c定义一个常量（固定不变的值） /p密码（变量名.全大写表示固定值） /123456字符串
+
+window.onload = function(){//w整个浏览器窗口网页.网页 /o加载完成的时候 /=等于.设置 /f要执行的函数.代码 /{代码开始
+  let input = prompt("请输入管理员密码：");//l定义一个变量（存东西用） /i变量名字（用户输入的内容） /=把右边的值存到左边变量里 /p弹出一个输入框.让用户打字
+  if(input !== PASSWORD){//i如果 /i用户输入的密码 /！==不等于.不匹配 /p你之前设置的正确密码（123456）
+    document.body.innerHTML = "<h1>无权访问</h1>";//d整个网页文档 /b网页的内容区域 /i把里面的内容全部替换掉
+    return;//r立即停止代码.后面的都不执行了
+  }
+  loadOrders();//l（）加载订单列表（只有代码正确才会执行）
+}
+
+// 加载订单
+function loadOrders(){//f函数（用来封装一段代码） /l加载.读取 /O订单（复数）
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];//l声明可变变量 /o订单（变量名） /J一种数据格式 /p解析.转换 /lS浏览器本地存储 /g获取.取出 /I项目.数据项 /o存储名为o的数据 /||或 /[]空数组
+  // 给旧订单补全status            //用户确认收货 补加
+  orders = orders.map(o => {//or订单数组 /m循环.遍历（处理每一条数据） /o当前这条订单 /=>箭头函数
+    if(!o.status) o.status = "待付款";//i如果 /！o没有状态.状态为空 /os设置状态为待付款
+    return o;//r返回处理好的订单
+  });
+  let list = document.getElementById("orderList");//l列表（自定义名字,代表页面上的订单内容器） /d整个网页文档 /gD通过ID获取元素 /ol找到id=ol的标签
+  list.innerHTML = "";//l刚才找到的订单盒子 /i里面的HTML内容 /""空内容
+
+  if(orders.length === 0){//i如果 /o订单数据 /l长度.数量 /绝对等于 /0零
+    list.innerHTML = "<p>暂无订单</p>";//l订单显示区域 /i里面的HTML内容
+    return;//r返回.停止执行
+  }
+   let html = ""; // 必须用let声明，初始化空字符串                     //用户确认收货 补加
+
+  orders.forEach((o, i)=>{//o订单数组（所有订单数据） /f挨个遍历 /E一个一个循环 /o当前这一条订单（简写order） /i序号.索引（第几个） /=>箭头函数（固定写法）
+    // 状态颜色
+    let color = "#666";//c颜色 （变量名,存文字颜色） /#6灰色（默认颜色）
+    if(o.status === "已付款") color = "blue";//i如果 /o当前这条订单 /s状态 /=完全等于 /c颜色 /b把颜色改成蓝色
+    if(o.status === "已发货") color = "green";//g绿色 /p紫色
+    if(o.status === "已完成") color = "purple";
+
+    //h变量名.用来拼接网页代码 /`反引号:模板字符串,可以写多行.放变量 /class=order给这个div命名为order（样式用）
+    //${ }把JS变量放进HTML里 /i循环的序号（从0开始） /i+1变成第1.2.3....条订单  /${ }把数据变量存到这里 /o当前这一条订单 /.的
+    //o.name这条订单的客户名字  /color:${color}颜色用刚才设置好的颜色（蓝/绿/紫/灰） /ft字体 /b加粗 /o订单 /s状态
+   // 正确 ↓   =是覆盖 /+=是追加（所有订单都会显示出来）
+html += `
+    <div class="order">
+      <p>订单 ${i+1}</p>
+      <p>客户：${o.name}</p>
+      <p>电话：${o.phone}</p>
+      <p>地址：${o.address}</p>
+      <p>商品：${o.product}</p>
+      <p>数量：${o.count}</p>
+      <p>总价：${o.total} 元</p>
+      <p>时间：${o.time}</p>
+      <p style="color:${color};font-weight:bold;">
+        状态：${o.status}
+      </p>
+      <button onclick="setStatus(${i},'已付款')">标记已付款</button>
+      <button onclick="setStatus(${i},'已发货')">标记已发货</button>
+      <button onclick="setStatus(${i},'已完成')">标记已完成</button>
+      <button onclick="delOrder(${i})">删除订单</button>
+    </div>
+    `;
+   });
+    list.innerHTML += html;//l页面上放订单的盒子（你前面获取的orderlist） /i盒子里面的HTML内容 /+=追加.添加（不是覆盖,是在后面加）/h你刚才拼接好的一条订单的完整代码
+ 
+}
+
+// 修改状态（带流转校验，只能按顺序改）//用户确认收货
+function setStatus(index, status){//f定义函数 /s设置 S状态 /（）参数括号 /i订单序号.（第几条订单） /，分隔 /s要改成的最新状态（已付款/已发货/已完成）
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];//l定义变量 /存储所有订单 /JP把本地文本——>转成JS能识别的数组 /l（"or从本地存储读取订单数据 /||或[]空数组
+  let currentStatus = orders[index].status || "待付款";//l定义变量 /c当前 /S状态 /or所有订单 /[i第几条订单 /s状态 /||或
+
+  // 状态流转规则：只能按顺序推进，不能跳步
+  if(status === "已付款" && currentStatus !== "待付款"){//i如果 /s将要设置的状态 =完全等于 /&并且 /cS订单当前状态 /！非.不 /！==完全不等于
+    alert("只有待付款订单才能标记已付款");//a弹出提示框
+    return;//r返回.停止执行
+  }
+  if(status === "已发货" && currentStatus !== "已付款"){
+    alert("只有已付款订单才能标记已发货");
+    return;
+  }
+  if(status === "已完成" && currentStatus !== "已发货"){
+    alert("只有已发货订单才能标记已完成");
+    return;
+  }
+
+  orders[index].status = status;//or订单数组 [i]第几条订单 /s状态 /新状态
+  localStorage.setItem("orders", JSON.stringify(orders));//lS本地存储 /s保存 /I项.数据 /or订单数组 /Jy转成字符串
+  loadOrders();//l加载.刷新 /o订单数组 /（）执行.运行
+}
+
+// 删除订单
+function delOrder(index){//f定义函数 /d删除 /O订单 /i第几条订单
+  if(!confirm("确定删除该订单？此操作不可恢复！")) return;//i如果 /！否.非 /c弹出确认框 /r立即停止代码
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];//l定义 /订单变量 /Jp转换格式 /lSgI（"or读取本地所有订单 ||或 /[]空数组
+  orders.splice(index, 1);//o订单数组 /s（）删除.截取（数组专用删除方法） /i第几条订单 /1删除1个
+  localStorage.setItem("orders", JSON.stringify(orders));
+  //lS本地存储 /s保存 /I项 /o订单数组 /Jsy转成文本 /（or完成后的新订单列表
+  loadOrders();//l加载.刷新 /订单数组 /（）执行.运行代码
+}
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+    <meta charset="UTF8">
+    <title>我亲手写的第一个网页</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+   
+  /*改图片的颜色大小属性*/
+  img {                     /* 所有图片的样式 */
+    width: 200px;         /* 图片宽度固定200像素 */
+    margin: 10px;         /* 图片四周留出10像素空白，不贴在一起 */
+    cursor: pointer;      /* 鼠标放到图片上，变成小手形状 */
+    border-radius: 20px;  /* 图片四个角变圆，圆角20像素 */
+    box-shadow: 0 9px 8px rgba(0, 0, 225, 0.15);  /* 图片加蓝色阴影，更立体 */
+}
+  /* 新加的：鼠标放上去放大 */
+img:hover {          /* 鼠标放到图片上时 */
+  transform: scale(1.08); /* 图片放大 1.08 倍 */
+  transition: 0.2s;       /* 放大动画 0.2 秒完成，变得顺滑不突兀 */
+}
+/*自插图片*/
+  .tupian {
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius:0px;
+   }
+   /*大标题*/
+   .header {            /* 页面头部 / 标题区域 */
+  text-align: center;/* 文字居中 */
+  padding: 20px;     /* 内部上下左右留白 20px */
+  background: #fff;  /* 背景白色 */
+  margin-bottom: 20px;/* 下方留出 20px 空白，和下面内容隔开 */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);/* 底部淡淡的阴影，更立体好看 */
+}
+/*页底*/
+.footer {            /* 网页底部（页脚） */
+  text-align: center;/* 文字居中 */
+  padding: 15px;     /* 内部四边留白 15px */
+  margin-top: 30px;  /* 上方空出 30px，和上面内容隔开 */
+  color: #666;       /* 文字颜色：灰色 */
+  font-size: 14px;   /* 字体大小 14 像素（偏小一点） */
+}
+/* 轮播图整体样式 1*/
+.carousel {                    /* .carousel：轮播图最外层盒子 */
+  position: relative;          /* position：定位  relative：相对定位 */
+  max-width: 1200px;           /* max-width：最大宽度  1200px：1200像素 */
+  margin: 0 auto;              /* margin：外边距  0 auto：上下0 左右自动居中 */
+  overflow: hidden;            /* overflow：超出部分  hidden：隐藏 */
+  border-radius: 12px;         /* border-radius：边框圆角  12px：圆角大小 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);  /* box-shadow：盒子阴影  后面数值是阴影大小和透明度 */
+}
+
+.carousel-inner {            /* 轮播图内部滑轨 */
+  display: flex;             /* display：显示方式  flex：弹性布局（让图片横着排成一排） */
+  transition: transform 0.5s ease;  /* transition：过渡动画  transform：移动  0.5s：0.5秒  ease：平滑过渡 */
+}
+
+.carousel-item {             /* 轮播图每一项（每张图片） */
+  flex: 0 0 100%;            /* flex：布局设置  0 0 100%：固定占满父容器100%宽度 */
+}
+.carousel-item img {         /* 轮播图里的图片 */
+  width: 600px;               /* width：宽度  600px：600像素 */
+  height: 500px;              /* height：高度  500px：500像素 */
+  object-fit: cover;         /* object-fit：图片适配方式  cover：自动裁剪、不变形、铺满容器 */
+  margin: 10px;               /* margin：外边距  10px：图片四周留10像素空白 */
+  cursor: pointer;            /* cursor：鼠标样式  pointer：小手形状 */
+  border-radius: 20px;        /* border-radius：圆角  20px：圆角大小 */
+  box-shadow: 0 9px 8px rgba(0,0,255,0.15);  /* box-shadow：阴影  蓝色淡阴影 */
+}
+
+/* 小圆点 */
+.carousel-dots {                /* 小圆点总容器 */
+  position: absolute;           /* position：定位  absolute：绝对定位 */
+  bottom: 15px;                 /* bottom：距离底部  15px：15像素 */
+  left: 50%;                    /* left：距离左边  50%：一半位置 */
+  transform: translateX(-50%);  /* transform：位移  translateX：水平移动  -50%：向左回退一半 */
+  display: flex;                /* display：显示方式  flex：弹性布局（让小圆点横排） */
+  gap: 10px;                    /* gap：间距  10px：点点之间空10像素 */
+}
+
+.dot {                       /* 单个小圆点 */
+  width: 12px;               /* width：宽度  12px：12像素 */
+  height: 12px;              /* height：高度  12px：12像素 */
+  border-radius: 50%;        /* border-radius：圆角  50%：正圆形 */
+  background: rgba(255,255,255,0.5);  /* background：背景色  白色半透明 */
+  cursor: pointer;           /* cursor：鼠标样式  pointer：小手形状 */
+  transition: all 0.3s;      /* transition：过渡动画  all：所有属性  0.3秒平滑变化 */
+}
+
+.dot.active {                 /* 被点亮的小圆点 */
+  background: #fff;          /* background：背景色  #fff：纯白色 */
+  transform: scale(1.2);     /* transform：变形  scale：放大  1.2：放大1.2倍 */
+}
+/*左右箭头样式 2*/
+.prev,.next{                 /* 上一张、下一张按钮 */
+  position:absolute;         /* 定位方式：绝对定位 */
+  top:50%;                   /* 距离顶部：50% */
+  transform:translateY(-50%);/* 向上移动自身高度的50%，实现垂直居中 */
+  width:40px;                /* 宽度：40像素 */
+  height:40px;               /* 高度：40像素 */
+  background:rgba(0,0,0,0.3);/* 背景：黑色半透明，透明度0.3 */
+  color:#fff;                /* 文字颜色：白色 */
+  font-size:20px;            /* 字体大小：20像素 */
+  text-align:center;         /* 文字水平居中 */
+  line-height:40px;          /* 行高40px，让图标垂直居中 */
+  cursor:pointer;            /* 鼠标移上去变成小手 */
+  z-index:10;                /* 层级10，显示在最上层 */
+  border-radius:50%;         /* 圆角50%，变成圆形按钮 */
+}
+.prev{left:20px;}             /* 左按钮：距离左边20像素 */
+.next{right:20px;}            /* 右按钮：距离右边20像素 */
+
+/*鼠标悬浮暂停动画*/
+.carousel:hover .carousel-inner{  /* 鼠标悬浮在轮播上时 */
+  animation-play-state:paused;    /* 轮播动画暂停 */
+}
+/* 分类按钮样式 3 */
+#goodsContainer {          /* 商品容器 */
+  max-width: 1200px;       /* 最大宽度：1200像素 */
+  margin: 20px auto;       /* 上下外边距20px，左右自动居中 */
+  display: grid;           /* 布局方式：网格布局 */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));  /* 自动排列列，每列最小220px，自适应宽度 */
+  gap: 20px;               /* 格子之间的间距：20像素 */
+  padding: 0 20px;         /* 左右内边距20px，上下无内边距 */
+}
+
+#goodsContainer img {       /* 商品容器里的图片 */
+  width: 200px;             /* 宽度：200像素 */
+  height: 200px;            /* 高度：200像素 */
+  object-fit: cover;        /* 图片保持比例填满容器，不变形 */
+  margin: 0 auto;           /* 上下无间距，左右自动居中 */
+  cursor: pointer;          /* 鼠标移上去变成小手 */
+  border-radius: 20px;      /* 圆角：20像素 */
+  box-shadow: 0 9px 8px rgba(0, 0, 225, 0.15);  /* 蓝色阴影效果 */
+  transition: 0.2s;         /* 过渡动画时长：0.2秒 */
+}
+
+#goodsContainer img:hover {  /* 鼠标悬浮在商品图片上时 */
+  transform: scale(1.08);    /* 图片放大到 1.08 倍 */
+}
+/* 搜索框样式 4 sy */       /* 注释：搜索框样式，作者/版本标记 */
+.search-box{                /* 搜索框容器 */
+  max-width: 600px;         /* 最大宽度：600像素 */
+  margin: 20px auto;        /* 上下外边距20px，左右自动居中 */
+  text-align: center;       /* 文字/内容水平居中 */
+}
+#searchInput{                /* 搜索输入框 */
+  width: 70%;                /* 宽度：父容器的70% */
+  padding: 10px 15px;        /* 内边距：上下10px，左右15px */
+  border: 1px solid #ddd;    /* 边框：1px 实线 浅灰色 */
+  border-radius: 20px 0 0 20px;  /* 圆角：左上角、左下角20px，右边直角 */
+  font-size: 16px;           /* 字体大小：16像素 */
+  outline: none;             /* 聚焦时去掉默认蓝色边框 */
+}
+.search-box button{          /* 搜索框里的按钮 */
+  padding: 10px 20px;        /* 内边距：上下10px，左右20px */
+  border: none;              /* 无边框 */
+  background: #3462f8;        /* 背景色：蓝色 */
+  color: #fff;               /* 文字颜色：白色 */
+  border-radius: 0 20px 20px 0;  /* 圆角：右上角、右下角20px */
+  cursor: pointer;           /* 鼠标悬浮变成小手 */
+  font-size: 16px;           /* 字体大小：16像素 */
+}
+.search-box button:hover{    /* 鼠标悬浮在搜索按钮上时 */
+  background: #254edb;       /* 背景色变成深蓝色 */
+}
+
+</style>
+<body>
+    <div class="header">
+  <h1>我的产品展示</h1>
+  <!--导航栏-->
+  <div class="nav">
+  <a href="index.html">首页</a><!--(首页、产品...)就是导航栏里面的文字链接-->
+  <a href="product.html">产品</a>
+  <a href="cart.html">购物车</a>
+  <a href="lookorder.html">订单</a>
+  <a href="contact.html">联系我们</a>
+  <a href="message.html">留言板</a>
+   <span id="loginInfo" style="color:#fff; margin-left:10px;"></span><!--注册登录链接-->
+</div>
+</div>
+<!-- 商品搜索框 4 sy -->
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="输入商品名称搜索...">
+  <button onclick="searchGoods()">搜索</button><!--sG搜索商品（函数名）/（）执行.调用-->
+</div>
+<!-- 商品分类导航 3 -->
+<div class="cate-nav">
+  <button class="cate-btn active" data-filter="all">全部商品</button>
+  <button class="cate-btn" data-filter="dianzi">电子产品</button>
+  <button class="cate-btn" data-filter="fushi">服饰穿搭</button>
+  <button class="cate-btn" data-filter="life">生活用品</button>
+  <!-- 商品图片容器（只筛选这里面的图片） 3 /4sy -->
+<div id="goodsContainer">
+  <img src="1.jpeg" class="tupian" data-cate="fushi" data-name="同年照片" onclick="openImage(this.src)">
+  <img src="3.jpeg" data-cate="fushi" data-name="汉服照片" onclick="openImage(this.src)">
+  <img src="5.jpeg" data-cate="dianzi" data-name="银河系星空" onclick="openImage(this.src)">
+  <img src="6.jpeg" data-cate="life" data-name="蜜蜂箱山坡" onclick="openImage(this.src)">
+  <img src="7.jpeg" data-cate="life" data-name="土地山丘" onclick="openImage(this.src)">
+  <img src="9.jpg" data-cate="fushi" data-name="我自己喜欢吗" onclick="openImage(this.src)">
+  <img src="10.jpg" class="tupian" data-cate="dianzi" data-name="二次元动画视频" onclick="openImage(this.src)">
+</div>
+</div>
+<!-- 轮播图容器 1-->
+<div class="carousel" id="carousel"><!--ca轮播图  第一层（大房间）第二层（滑轨）第三层（图片床位）-->
+  <div class="carousel-inner"><!--clcaer轮播图内部内容区（装图片的地方）-->
+    <div class="carousel-item active"><!--clcam每一张图片 /a当前显示的图片-->
+      <img src="1.jpeg" alt="轮播图1"><!--a等于图片名字-->
+    </div>
+    <div class="carousel-item">
+      <img src="3.jpeg" alt="轮播图2">
+    </div>
+    <div class="carousel-item">
+      <img src="5.jpeg" alt="轮播图3">
+    </div>
+    <div class="carousel-item">
+      <img src="6.jpeg" alt="轮播图4">
+    </div>
+    <div class="carousel-item">
+      <img src="7.jpeg" alt="轮播图5">
+    </div>
+    <div class="carousel-item">
+      <img src="9.jpg" alt="轮播图6">
+    </div>
+    <div class="carousel-item">
+      <img src="10.jpg" alt="轮播图7">
+    </div>
+  </div>
+  <!-- 小圆点指示器 1-->
+  <div class="carousel-dots"><!--c轮播 /d点点 /第一层放所有小圆点的大盒子（容器）-->
+    <span class="dot active" data-index="0"></span><!--d小圆点样式 /a当前选中.高粱的小圆点 /da数据 /i序号 /-->
+    <span class="dot" data-index="1"></span>
+    <span class="dot" data-index="2"></span>
+    <span class="dot" data-index="3"></span>
+    <span class="dot" data-index="4"></span>
+    <span class="dot" data-index="5"></span>
+    <span class="dot" data-index="6"></span>
+  </div>
+  <!--左右箭头2-->
+<div class="prev">&#10094;</div><!--p上一个.上一张 /n下一个.下一张-->
+<div class="next">&#10095;</div>
+</div>
+<img src="1.jpeg" class="tupian" onclick="openImage(this.src)"><!--网页图片-->
+    <img src="3.jpeg" onclick="openImage(this.src)">
+    <img src="5.jpeg" onclick="openImage(this.src)">
+    <img src="6.jpeg" onclick="openImage(this.src)">
+    <img src="7.jpeg" onclick="openImage(this.src)">
+    <img src="9.jpg" onclick="openImage(this.src)">
+    <img src="10.jpg" class="tupian" onclick="openImage(this.src)">
+
+    <script>
+// 点击图片放大查看
+function openImage(src) {
+  let lightbox = document.createElement("div");
+  lightbox.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;justify-content:center;align-items:center;";
+  lightbox.onclick = function(){ lightbox.remove() };
+
+  let img = document.createElement("img");
+  img.src = src;
+  img.style.cssText = "width:auto;height:100vh;object-fit:contain;";
+
+  lightbox.appendChild(img);
+  document.body.appendChild(lightbox);
+}
+// 显示登录状态  //注册登录链接
+function showLoginStatus() {//f定义函数.功能 /s显示 /L登录 /S状态
+  let user = localStorage.getItem("loginUser");//l定义.创建 /u用户名（变量） /l浏览器本地存储 /g取出.获取 /l名字叫（"lo的数据
+  let info = document.getElementById("loginInfo");//i信息.提示文字 /d网页文档 /gd通过id查找元素 /l ID叫（"lo的标签
+  if (user) {//i如果 /u用户名存在
+    info.innerHTML = `欢迎，${user} <a href="javascript:logout()" style="color:#ff0;">退出</a>`;//i刚才找到的.显示信息盒子 /i往盒子里写入HTML内容 /`反引号,包裹一段文字+代码 /${插入登录的用户名（变量）/ht（）点击后执行退出函数 /c颜色 /#黄色
+  } else {//e否则.如果不满足上面的条件
+    info.innerHTML = `<a href="login.html" style="color:#fff;">登录</a> | <a href="register.html" style="color:#fff;">注册</a>`;//f显示信息的盒子 /i写入HTML内容 /`包裹内容+字段代码 /hl跳转到登录页面的链接 /c颜色 /#f白色 /|竖线.分隔符号 /hl跳转到注册页面的链接
+  }
+}
+
+// 退出登录
+function logout() {//lo退出登录 /（l注销 /o退出
+  localStorage.removeItem("loginUser");//lS浏览器本地存储 /r删除 /I数据 /（"lo名为lo的数据
+  alert("已退出登录");//a弹出提示框
+  location.reload();//l当前网页 /r（）刷新.重新加载
+}
+
+// 页面加载就执行
+window.onload = function() {//w浏览器窗口.整个网页 /o加载完成时 /f（）诺名函数.要执行的代码
+  showLoginStatus();//s显示 /l登录 /S状态 /（）执行.调用
+}
+//轮播图 1
+let currentIndex = 0;//l定义变量 /c当前 /I序号.索引 /0从第0个开始（第1张图）
+const items = document.querySelectorAll('.carousel-item');//c定义常量（固定不变）/i所有图片项 /d整个网页 /qSA查找.选中所有 /ci图片盒子
+const dots = document.querySelectorAll('.dot');//d很多个小圆点（复数）
+const inner = document.querySelector('.carousel-inner');//i在....里面 /n后缀
+const total = items.length;//c定义一个固定的变量 /t总数.总共 /i你刚才拿到的所有轮播图片 /l长度.数量
+
+// 无限循环核心：复制首尾元素，实现无缝滚动
+function initCarousel() {//f函数 /i初始化.准备 /C轮播图 /
+  const firstClone = items[0].cloneNode(true);
+  //常量（固定不变的量）/f第一个 /C克隆.复制 /i所有轮播项集合 /[0下标,代表集合里第一个元素 /c复制 /N节点（网页元素）/t深度复制（连带里面内容,标签,样式,一起复制）
+  const lastClone = items[total - 1].cloneNode(true);
+//c常量 /l最后一个 /C复制 克隆 /i轮播图所有项 /t总数.总数量 /-减号 /1数字1 /c复制 /N节点 /t深度复制（包含子元素）
+  
+  inner.appendChild(firstClone);//i内部容器（装图片的滑轨）/a添加.追加 /C子元素 /fC第一张图的副本
+  inner.insertBefore(lastClone, items[0]);//i内部内容 /B在...之前 /lC最后一张图的副本 /i[0原来的第一张图
+  
+  // 初始位置从复制的最后一张图开始（视觉上还是第一张）
+  inner.style.transform = `translateX(-100%)`;//i内部容器（装图片的滑轨）/tf形变.位移 /tl水平平移 /-100%向左移动整个容器宽度
+  currentIndex = 1;//ctd当前索引.当前图片序号 /1数字1
+}
+
+// 自动切换
+function nextSlide() {//f函数 /n下一个 /S幻灯片.轮播图
+  currentIndex++;//c当前的 /I序号.索引 ++自增1.加1
+  updateSlide();//u更新 /S轮播图
+  
+  // 滑到最后一张复制图时，瞬间跳回真实第一张，实现无限循环
+  if(currentIndex === total + 1) {//i如果 /c当前 /I序号 /=完全等于 /t总数 /+加 /1是1
+    setTimeout(() => {//st延迟执行
+      inner.style.transition = 'none';//i内部滑轨 /tt过度动画 /n无.关闭
+      currentIndex = 1;//c当前 /I序号.索引 /1数字1
+      inner.style.transform = `translateX(-100%)`;//i内部滑轨 /tf位移 /tt水平平移 /-向左移动100%
+      setTimeout(() => {//s延迟执行
+        inner.style.transition = 'transform 0.5s ease';//i内部滑轨 /tt高度动画 /tf位移 /5s5秒 /e滑动
+      }, 50);
+    }, 500);
+  }
+}
+
+// 切换到指定页
+function goToSlide(index) {//f函数 /g跳转到 /S轮播图 /i索引.序号
+  currentIndex = index + 1; //c当前 /I序号.索引 /索引+1
+  updateSlide();//u更新 /S轮播图
+}
+
+// 更新位置和圆点
+function updateSlide() {//f函数 /u更新 /S幻灯片
+  inner.style.transform = `translateX(-${currentIndex * 100}%)`;
+  //i内部滑轨 /tf位移 /tt水平平移 /-负号（向左移 /$模板字符串拼接符号（连接变量）/c当前 /I序号 /*乘以 /100一百 /%百分比
+  
+  // 圆点索引要-1，对应真实图片
+  const dotIndex = (currentIndex - 1 + total) % total;//c常量 /d点 /I索引.序号 /c当前图片 /I序号 /-减号 /1数字1 /+加 /t总数 /%取余（取余数）/t总数
+  dots.forEach((dot, i) => {//d所有小圆点集合 /fE遍历.循环每一个 /d圆点 /i序号
+    dot.classList.toggle('active', i === dotIndex);//d圆点 /c类名 /L列表 /t切换.开关 /a激活.点亮 /i圆点的索引 /=完全等于 /d圆点 /I序号.索引
+  });
+}
+
+// 点击小圆点
+dots.forEach((dot, i) => {//d所有小圆点 /fE遍历.循环每一个 /d单个小圆点 /i小圆点序号
+  dot.addEventListener('click', () => goToSlide(i));//d单个小圆点 /aLr添加事件监听 /c点击 /g跳转 /T到 /S指定轮播图
+});
+// 点击左右箭头2
+document.querySelector('.prev').addEventListener('click', () => {
+  //d文档.整个网页 /qSr查找.选择元素 /p类名为p的元素(左箭头) /aLr添加事件监听 /c点击
+  currentIndex--;//c当前图片 /I序号.索引 /-自减.减1
+  updateSlide();//u更新 /S轮播图
+});
+document.querySelector('.next').addEventListener('click', () => {
+  //d网页文档 /qSr查找.选择 /n类名（右箭头按钮）/aLr添加事件监听 /c点击 /（）执行.调用
+  nextSlide();//n类名 S轮播图
+});
+
+// 页面加载完成后初始化轮播
+window.onload = function() {//w窗口.页面 /o加载完成 f函数
+  initCarousel();//i初始化 /u轮播图
+
+// 自动播放
+setInterval(nextSlide, 4000);//S设置 /I间隔.间歇 /nS下一张图（函数名） /4毫米 /（）执行.运行
+}
+//商品筛选  3
+const cateBtns = document.querySelectorAll('.cate-btn');
+//c常量 /ca分类（category缩写）/B按钮（按钮 缩写）/d网页文档 /qSA查询选择全部元素/cb类名为的元素
+// 只选中商品容器内的图片，绝对不影响页面其他元素 
+const goodsImgs = document.querySelectorAll('#goodsContainer img[data-cate]');
+//c常量 /g商品 /I图片（ima缩写）/d网页文档 /qSA查询所有.选中全部 /#gid名 /i图片标签 /[d id名
+
+cateBtns.forEach(btn => {//c分类 /B按钮 /f遍历 /E挨个循环 /b单个按钮
+  btn.addEventListener('click', function() {//aLR添加事件监听 /c点击 /f函数.执行代码
+    // 切换按钮高亮
+    cateBtns.forEach(b => b.classList.remove('active'));
+    //c分类 /B按钮 /f遍历E挨个循环 /b每一个按钮（简写）/b按钮 /c类名列表 /r删除.移除 /a激活.高亮样式
+    this.classList.add('active');//t当前点击的这个按钮 /c类名列表 /ad添加 /a激活.高亮样式
+
+    // 获取当前选中的分类
+    const selectFilter = this.getAttribute('data-filter');//c常量 /s选择.选中 /F筛选.过漉 /t当前点击的按钮 /gt获取属性 /df自定义的筛选属性
+
+    // 只遍历商品容器内的图片，其他元素完全不受影响
+    goodsImgs.forEach(img => {//g商品 /I图片 /f遍历 /E循环每一个 /i每个图片
+      if (selectFilter === 'all' || img.dataset.cate === selectFilter) {
+        //i如果 /sFr选中的筛选条件 /=完全等于 /a全部 /||或 /idc图片的分类属性 /s选中的筛选条件
+        img.style.display = 'inline-block'; //i图片 /d显示方式 /ib行类块级（正常显示）
+      } else {//e否则
+        img.style.display = 'none'; //i图片 /d显示方式 /n无.隐藏
+      }
+    });
+  });
+});
+// 商品搜索功能 4 sy
+function searchGoods() {//f函数 /sG搜索商品
+  const input = document.getElementById('searchInput').value.trim().toLowerCase();
+  //c常量 /i输入内容 / /d网页文档 /gEd通过ID获取元素 /sI(id名) /v输入框里的值 /t（）去除首尾空格 /t（）转为小写
+  const goodsImgs = document.querySelectorAll('#goodsContainer img[data-name]');
+//c常量 /g商品 /I图片 /d网页文档 /qSI查找所有元素 /#gr（id名） /i图片标签 /[dn带有dn自定义属性
+
+  if (!input) {//i如果 /!非.没有 /i输入内容为空
+    goodsImgs.forEach(img => img.style.display = 'inline-block');
+    //g商品 /I图片 /f遍历 /E循环每一个 /i单个图片 /d显示状态 /i正常 /b显示
+    return;//返回.结束函数
+  }
+
+  // 模糊匹配商品名称
+  goodsImgs.forEach(img => {//g商品 /I图片 /fE循环遍历每一个 /i单个图片
+    const name = img.dataset.name.toLowerCase();//c常量 /n商品名称 /i图片 /dn属性值 /tC（）转为小写字母
+    if (name.includes(input)) {//i如果 /n商品名称 il包含 /i输入的关键词
+      img.style.display = 'inline-block';//i图片 /d显示状态 /i正常 /b显示
+    } else {//e否则
+      img.style.display = 'none';//i图片 /显示状态 /n关闭.隐藏
+    }
+  });//});循环结束
+}
+
+// 支持回车搜索
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  //d网页文档 /gEB通过id获取元素 /（'sIt（id名） /aLer添加事件监听 /k按键按下 /f函数 /（e事件对象（保存按键信息）
+  if (e.key === 'Enter') {//i如果 /e.k按下的键 /=完全等于 /回车键
+    searchGoods();//s（）执行搜索函数
+  }
+});
+</script>
+<div class="footer">
+  © 2026 我的产品展示 - 保留所有权利
+</div>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+    <meta charset="UTF8">
+    <title>留言板</title><!--留言板大标题-->
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    
+  /*改图片的颜色大小属性*/
+  img {                     /* 所有图片的样式 */
+    width: 200px;         /* 图片宽度固定200像素 */
+    margin: 10px;         /* 图片四周留出10像素空白，不贴在一起 */
+    cursor: pointer;      /* 鼠标放到图片上，变成小手形状 */
+    border-radius: 20px;  /* 图片四个角变圆，圆角20像素 */
+    box-shadow: 0 9px 8px rgba(0, 0, 225, 0.15);  /* 图片加蓝色阴影，更立体 */
+}
+  /* 新加的：鼠标放上去放大 */
+img:hover {          /* 鼠标放到图片上时 */
+  transform: scale(1.08); /* 图片放大 1.08 倍 */
+  transition: 0.2s;       /* 放大动画 0.2 秒完成，变得顺滑不突兀 */
+}
+/*自插图片*/
+  .tupian {
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius:0px;
+   }
+   /*大标题*/
+   .header {            /* 页面头部 / 标题区域 */
+  text-align: center;/* 文字居中 */
+  padding: 20px;     /* 内部上下左右留白 20px */
+  background: #fff;  /* 背景白色 */
+  margin-bottom: 20px;/* 下方留出 20px 空白，和下面内容隔开 */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);/* 底部淡淡的阴影，更立体好看 */
+}
+/*页底*/
+.footer {            /* 网页底部（页脚） */
+  text-align: center;/* 文字居中 */
+  padding: 15px;     /* 内部四边留白 15px */
+  margin-top: 30px;  /* 上方空出 30px，和上面内容隔开 */
+  color: #666;       /* 文字颜色：灰色 */
+  font-size: 14px;   /* 字体大小 14 像素（偏小一点） */
+}
+/*lyb*/
+.message-form {                     /* 留言表单容器 */
+  max-width: 500px;                 /* 最大宽度：500像素 */
+  margin: 30px auto;                /* 外边距：上下30px，左右自动居中 */
+  padding: 20px;                    /* 内边距：20像素 */
+  background: #fff;                 /* 背景：白色 */
+  border-radius: 15px;               /* 边框圆角：15像素 */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);  /* 盒子阴影：轻微灰色阴影 */
+}
+
+</style>
+<body>
+    <div class="header">
+  <h1>留言板</h1><!--留言板大标题-->
+</div>
+  <!--导航栏-->
+  <div class="nav">
+  <a href="index.html">首页</a><!--(首页、产品...)就是导航栏里面的文字链接-->
+  <a href="product.html">产品</a>
+  <a href="cart.html">购物车</a>
+  <a href="lookorder.html">订单</a>
+  <a href="contact.html">联系我们</a>
+  <a href="message.html">留言板</a>
+  <span id="loginInfo" style="color:#fff; margin-left:10px;"></span><!--注册登录链接-->
+</div>
+<div class="message-form">
+  <h3>给我留言</h3><!--留言板-->
+  <input type="text" id="msgName" placeholder="您的姓名" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
+  <input type="text" id="msgPhone" placeholder="您的电话（选填）" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
+  <textarea id="msgContent" placeholder="留言内容" style="width:100%; padding:10px; margin:10px 0; height:120px; border:1px solid #ddd; border-radius:5px;"></textarea>
+  <button onclick="submitMsg()" style="background:red; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-size:16px;">提交留言</button>
+</div>
+
+<!-- 留言列表展示 -->
+<div id="msgList" style="max-width:600px; margin:30px auto; text-align:left;"></div>
+
+<img src="1.jpeg" class="tupian" onclick="openImage(this.src)">
+    <img src="3.jpeg" onclick="openImage(this.src)">
+    <img src="5.jpeg" onclick="openImage(this.src)">
+    <img src="6.jpeg" onclick="openImage(this.src)">
+    <img src="7.jpeg" onclick="openImage(this.src)">
+    <img src="9.jpg" onclick="openImage(this.src)">
+    <img src="10.jpg" class="tupian" onclick="openImage(this.src)">
+
+    <script>
+// 点击图片放大查看
+function openImage(src) {
+  let lightbox = document.createElement("div");
+  lightbox.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;justify-content:center;align-items:center;";
+  lightbox.onclick = function(){ lightbox.remove() };
+
+  let img = document.createElement("img");
+  img.src = src;
+  img.style.cssText = "width:auto;height:100vh;object-fit:contain;";
+
+  lightbox.appendChild(img);
+  document.body.appendChild(lightbox);
+}
+
+// 提交留言
+function submitMsg() {
+  let name = document.getElementById("msgName").value.trim();
+  let content = document.getElementById("msgContent").value.trim();
+  if(!name || !content) {
+    alert("请填写姓名和留言内容！");
+    return;
+  }
+
+  let msg = {
+    name: name,
+    phone: document.getElementById("msgPhone").value.trim(),
+    content: content,
+    time: new Date().toLocaleString()
+  };
+
+  let msgs = JSON.parse(localStorage.getItem("messages")) || [];
+  msgs.push(msg);
+  localStorage.setItem("messages", JSON.stringify(msgs));
+  
+  alert("留言成功！感谢您的反馈~");
+  // 清空输入框
+  document.getElementById("msgName").value = "";
+  document.getElementById("msgPhone").value = "";
+  document.getElementById("msgContent").value = "";
+  
+  // 刷新留言列表
+  loadMsgs();
+}
+
+// 加载留言列表
+function loadMsgs() {
+  let msgs = JSON.parse(localStorage.getItem("messages")) || [];
+  let list = document.getElementById("msgList");
+  list.innerHTML = "";
+  
+  if(msgs.length === 0) {
+    list.innerHTML = "<p style='text-align:center; color:#666;'>暂无留言</p>";
+    return;
+  }
+
+  msgs.forEach(msg => {
+    list.innerHTML += `
+      <div style="background:white; padding:15px; margin:10px 0; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+        <p style="font-weight:bold; margin:0 0 5px 0;">${msg.name}</p>
+        <p style="color:#666; font-size:14px; margin:0 0 10px 0;">${msg.time}</p>
+        <p style="margin:0;">${msg.content}</p>
+        ${msg.phone ? `<p style="color:#666; font-size:14px; margin:5px 0 0 0;">联系电话：${msg.phone}</p>` : ""}
+      </div>
+    `;
+  });
+}
+// 页面加载时自动加载留言
+window.onload = loadMsgs;
+
+// 显示登录状态   //注册登录链接
+function showLoginStatus() {//f定义函数.功能 /s显示 /L登录 /S状态
+  let user = localStorage.getItem("loginUser");//l定义.创建 /u用户名（变量） /l浏览器本地存储 /g取出.获取 /l名字叫（"lo的数据
+  let info = document.getElementById("loginInfo");//i信息.提示文字 /d网页文档 /gd通过id查找元素 /l ID叫（"lo的标签
+  if (user) {//i如果 /u用户名存在
+    info.innerHTML = `欢迎，${user} <a href="javascript:logout()" style="color:#ff0;">退出</a>`;//i刚才找到的.显示信息盒子 /i往盒子里写入HTML内容 /`反引号,包裹一段文字+代码 /${插入登录的用户名（变量）/ht（）点击后执行退出函数 /c颜色 /#黄色
+  } else {//e否则.如果不满足上面的条件
+    info.innerHTML = `<a href="login.html" style="color:#fff;">登录</a> | <a href="register.html" style="color:#fff;">注册</a>`;//f显示信息的盒子 /i写入HTML内容 /`包裹内容+字段代码 /hl跳转到登录页面的链接 /c颜色 /#f白色 /|竖线.分隔符号 /hl跳转到注册页面的链接
+  }
+}
+
+// 退出登录
+function logout() {//lo退出登录 /（l注销 /o退出
+  localStorage.removeItem("loginUser");//lS浏览器本地存储 /r删除 /I数据 /（"lo名为lo的数据
+  alert("已退出登录");//a弹出提示框
+  location.reload();//l当前网页 /r（）刷新.重新加载
+}
+
+// 页面加载就执行
+window.onload = function() {//w浏览器窗口.整个网页 /o加载完成时 /f（）诺名函数.要执行的代码
+  showLoginStatus();//s显示 /l登录 /S状态 /（）执行.调用
+}
+</script>
+<div class="footer">
+  © 2026 我的产品展示 - 保留所有权利
+</div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF8">
+  <title>订单管理</title>
+   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 样式 7    */
+    body {
+  text-align: center;
+  background: #f5f5f5;
+  color: #333;
+}
+   .nav {                      /* 导航栏容器 */
+  text-align: center;       /* 文字水平居中 */
+  margin: 20px 0;           /* 上下外边距 20px，左右 0（上下留空） */
+  background: #3462f8;       /* 背景颜色：蓝色 */
+  padding: 12px;            /* 内边距 12px（内容和边框之间的距离） */
+  border-radius: 30px;      /* 圆角 30px（让导航栏变成大圆角） */
+}
+.nav a {                     /* 导航栏里面的 链接文字 */
+  margin: 0 12px;           /* 左右外边距 12px（链接之间拉开距离） */
+  color: #fff;              /* 文字颜色：白色 */
+  text-decoration: none;     /* 去掉链接默认的下划线 */
+  font-size: 16px;          /* 字体大小：16像素 */
+}
+.nav a:hover {          /* 鼠标放到导航链接上时的效果 */
+  color: red;           /* 文字颜色变成：红色 */
+  font-weight: bold;    /* 文字变成：加粗 */
+}
+/* 样式 7    */
+.order-item {
+  background: white;
+  max-width: 600px;
+  margin: 15px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: left;
+}
+button {
+  padding: 8px 16px;
+  background: #3462f8;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 5px;
+}
+  </style>
+</head>
+<body>
+  <div class="nav">
+  <a href="index.html">首页</a>
+  <a href="product.html">产品</a>
+  <a href="cart.html">购物车</a>
+  <a href="lookorder.html">订单</a>
+  <a href="contact.html">联系我们</a>
+  <a href="message.html">留言板</a>
+  <span id="loginInfo"></span><!--注册登录-->
+</div>
+  <h1>订单</h1><!--订单网页-->
+  <button onclick="clearOrders()">清空所有订单</button><!--正在购买删除-->
+  <div id="list"></div>
+  <p id="totalPrice"></p><!--总价统计-->
+
+<script>
+let list = document.getElementById("list");
+//l定义变量 /l列表容器（用来显示订单的盒子） /d整个网页 /gI通过ID查找元素 /（"li找到id=（li的标签
+let orders = JSON.parse(localStorage.getItem("orders")) || [];//<!--订单弹窗-->//l定义变量 /o订单数据（数组） /Jp把文本——>转成JS可识别的数据 /lS浏览器本地存储 /gI获取数据 /（"or起名字叫or的数据 /||或 /[]空数组
+                                   //用户确认收货 补加
+// 修复：给所有旧订单补全status字段，避免空白
+orders = orders.map(o => {//or订单数组 /m遍历.映射（循环处理每一条） /o当前这一条订单 /=>箭头函数
+  if(!o.status) o.status = "待付款";//i如果 /！o没有状态.状态为空 /os给这条订单设置状态为待付款
+  return o;//r返回处理好的订单
+});
+
+//order卡片样式
+//o所有订单数据 /f挨个循环 /f一条一条处理 /o当前正在处理的第一天订单 =>箭头函数（固定写法） /l页面上显示订单的盒子 /i里面的HTML内容 /+=追加.添加（在后面加,不覆盖） /`多行HTML模板开始
+//c数量 /*称号 /td保留 /（2）2位小数 /g绿色 /fw字体 /b加粗 /s状态
+ //用户确认收货 补改
+// 订单卡片样式（修复版，带确认收货）
+orders.forEach((o, i)=>{//or订单数组 /f遍历.循环（挨个处理） /o当前循环到的这一条订单 /i当前订单的序号（下标/索引） /=>箭头函数
+   // 按钮显示逻辑：只有「已发货」状态才显示确认收货  //用户确认收货
+  let confirmBtn = "";//l定义变量 /c确认 /B按钮 /空字符串（先空着,后面在填）
+  if(o.status === "已发货"){//i如果 /o这条订单 /s的状态 /=完全等于
+    confirmBtn = `<button onclick="confirmReceive(${i})">确认收货</button>`;
+    //c确认 /B按钮 /c确认 /R收货 /${i}插入当前订单下标 /bd背景 /g绿色
+  }
+  // 状态颜色区分  //用户确认收货 补加
+let statusColor = "#666";
+if(o.status === "待付款") statusColor = "#666";
+if(o.status === "已付款") statusColor = "blue";
+if(o.status === "已发货") statusColor = "orange";
+if(o.status === "已完成") statusColor = "green";
+  list.innerHTML += `
+<div class="order-item">
+  <p>产品：${o.product}</p>
+  <p>价格：¥${o.price}.00</p>
+  <p>数量：${o.count} 件</p>
+  <p>小计：¥${(o.price * o.count).toFixed(2)}</p>
+  <p>姓名：${o.name}</p>
+  <p>电话：${o.phone}</p>
+  <p>地址：${o.address}</p>
+  <p>时间：${o.time}</p>
+  <p style="color:${statusColor};font-weight:bold;">
+订单状态：${o.status}
+</p>
+ ${confirmBtn}
+</div>
+`;
+})
+// 计算总价   /${ }模板字符串插值（把JS变量插到HTML里 /c确认收货 /B按钮（变量名）
+let total = 0;//t总数.总价 /0数字0
+orders.forEach(o => {//o订单列表 /f对于 /E每一个(fE遍历每一个)  0每个订单.简写 /=箭头函数.执行操作
+  total += o.price * o.count; // 按数量计算总价。  总价 /+累加 /0当前订单 /p价格 /*乘 /1数字1 
+});
+// 把总价显示到页面
+document.getElementById('totalPrice').textContent = `订单总金额：¥${total.toFixed(2)}`;//t文字 /C内容 /总价 /t转为 /f固定 /2两个小数
+function clearOrders() {//就一个{}删除订单记录 //c清空订单
+  if(confirm("确定要清空所有订单吗？ 此操作不可恢复！")) {//c弹出确认框
+    localStorage.removeItem("orders"); //l本地存储 /r删除数据 /o订单数据
+    location.reload();//当前页面地址 /重新加载.刷新页面
+  }
+}
+// 显示登录状态   //注册登录链接
+function showLoginStatus() {//f定义函数.功能 /s显示 /L登录 /S状态
+  let user = localStorage.getItem("loginUser");//l定义.创建 /u用户名（变量） /l浏览器本地存储 /g取出.获取 /l名字叫（"lo的数据
+  let info = document.getElementById("loginInfo");//i信息.提示文字 /d网页文档 /gd通过id查找元素 /l ID叫（"lo的标签
+  if (user) {//i如果 /u用户名存在
+    info.innerHTML = `欢迎，${user} <a href="javascript:logout()" style="color:#ff0;">退出</a>`;//i刚才找到的.显示信息盒子 /i往盒子里写入HTML内容 /`反引号,包裹一段文字+代码 /${插入登录的用户名（变量）/ht（）点击后执行退出函数 /c颜色 /#黄色
+  } else {//e否则.如果不满足上面的条件
+    info.innerHTML = `<a href="login.html" style="color:#fff;">登录</a> | <a href="register.html" style="color:#fff;">注册</a>`;//f显示信息的盒子 /i写入HTML内容 /`包裹内容+字段代码 /hl跳转到登录页面的链接 /c颜色 /#f白色 /|竖线.分隔符号 /hl跳转到注册页面的链接
+  }
+}
+
+// 退出登录
+function logout() {//lo退出登录 /（l注销 /o退出
+  localStorage.removeItem("loginUser");//lS浏览器本地存储 /r删除 /I数据 /（"lo名为lo的数据
+  alert("已退出登录");//a弹出提示框
+  location.reload();//l当前网页 /r（）刷新.重新加载
+}
+
+// 页面加载就执行
+window.onload = function() {//w浏览器窗口.整个网页 /o加载完成时 /f（）诺名函数.要执行的代码
+  showLoginStatus();//s显示 /l登录 /S状态 /（）执行.调用
+}
+// 确认收货  //用户确认收货
+function confirmReceive(index){//f定义函数 /c确认 /R收货 /（）放参数 /i订单序号.第几条订单 /
+  if(!confirm("确认已收到商品？订单将变为已完成状态")) return;//i如果 /！取反.不是.取消 /c弹出确认框 /r停止执行.退出函数
+  
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  //l定义变量 /o订单数组（所有订单） /JP把字符串——>转成JS能识别的数组 /lJ浏览器本地存储 /gI获取.项 /o订单数据 /||或 /[]空数组
+  orders[index].status = "已完成";//o所有订单 /i第i条订单 s状态 =设置为
+  localStorage.setItem("orders", JSON.stringify(orders));//lS浏览器本地存储 /s保存 /I项.数据 /or存储的名字 /Jy转成文本格式 or修改后的订单数据
+  
+  alert("确认收货成功！订单已完成");//a弹出提示框
+  location.reload(); // 刷新页面显示最新状态  /l当前页面地址 /r加载.刷新 /（）执行.运行
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+    <meta charset="UTF8">
+    <title>产品详情</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+ 
+  /*改图片的颜色大小属性*/
+  img {
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 20px;
+    box-shadow: 0 9px 8px rgba(0, 0, 225, 0.15); /* ✅ 只加这一行！ */
+  }
+  /* 新加的：鼠标放上去放大 */
+img:hover {
+  transform: scale(1.08);
+  transition: 0.2s;
+}
+/*自插图片打组*/
+  .tupian {
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius:0px;
+   }
+   /*大标题*/
+   .header {
+  text-align: center;
+  padding: 20px;
+  background: #fff;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+/*页底*/
+.footer {
+  text-align: center;
+  padding: 15px;
+  margin-top: 30px;
+  color: #666;
+  font-size: 14px;
+}
+/*调改商品卡片信息*/
+.product-item {                      /* 商品卡片盒子 */
+  background: #fff;                  /* 背景白色 */
+  padding: 20px;                     /* 内部留白20px，内容不贴边 */
+  margin: 20px;                      /* 卡片四周间距20px，互不拥挤 */
+  max-width: 300px;                  /* 卡片最大宽度300px */
+  border-radius: 15px;                /* 圆角15px，美观 */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);  /* 卡片阴影，立体效果 */
+  display: inline-block;             /* 让卡片并排显示，不独占一行 */
+  vertical-align: top;               /* 所有卡片顶部对齐 */
+}
+.product-item img {        /* 商品卡片里面的图片 */
+  width: 100%;             /* 图片宽度占满整个卡片，自动适配 */
+  height: 200px;      /* height 高度；200px 200像素（设置高度） */
+object-fit: cover;  /* object-fit 适配方式；cover 覆盖裁剪（图片不变形填满） */
+  border-radius: 10px;     /* 图片圆角10px，和卡片风格统一 */
+}
+.price {                  /* 价格文字样式 */
+  font-size: 20px;        /* 字体大小 20 像素（显眼） */
+  color: red;             /* 颜色：红色 */
+  font-weight: bold;      /* 文字加粗 */
+  margin: 10px 0;         /* 上下各留出 10px 空白，和其他内容隔开 */
+}
+.buy-btn {                /* 购买按钮样式 */
+  background: red;        /* 背景色：红色 */
+  color: #fff;            /* 文字颜色：白色 */
+  padding: 10px 25px;     /* 按钮内部上下10px、左右25px空白（让按钮变大） */
+  border-radius: 30px;    /* 按钮圆角30px，变成椭圆好看 */
+  border: none;           /* 去掉默认边框 */
+  font-size: 16px;        /* 字体大小16像素 */
+  cursor: pointer;        /* 鼠标放上去变成小手 */
+}
+/*加商品排行*/
+.product-list {
+  text-align: center; /* 让里面所有的商品卡片，整组在页面中间显示 */
+}
+/*商品卡片点击事件*/
+.modal {
+  display: none;          /* 一开始隐藏 */
+  position: fixed;        /* 固定在屏幕上 */
+  top: 0;                 /* 贴到顶部 */
+  left: 0;                /* 贴到左边 */
+  width: 100%;            /* 宽度铺满全屏 */
+  height: 100%;           /* 高度铺满全屏 */
+  background: rgba(0,0,0,0.5); /* 半透明黑色背景 */
+  z-index: 9999;          /* 放在最上层，不被挡住 */
+}
+.modal-content {
+  background: #fff;           /* 背景：白色 */
+  width: 300px;               /* 宽度：300像素 */
+  padding: 30px;              /* 内边距：30像素 */
+  border-radius: 15px;        /* 边框圆角：15像素 */
+  text-align: center;         /* 文字对齐：居中 */
+  position: absolute;         /* 定位方式：绝对定位 */
+  top: 50%;                   /* 距离顶部：50% */
+  left: 50%;                  /* 距离左侧：50% */
+  transform: translate(-50%, -50%);  /* 位移：向左向上各回退50%，实现真正居中 */
+}
+.close-btn {
+  background: red;           /* 背景：红色 */
+  color: #fff;               /* 文字颜色：白色 */
+  border: none;              /* 边框：无 */
+  padding: 10px 25px;        /* 内边距：上下10px 左右25px */
+  border-radius: 30px;       /* 边框圆角：30px（椭圆圆角） */
+  margin-top: 20px;          /* 距离顶部外边距：20px */
+  cursor: pointer;           /* 鼠标悬浮：变成小手样式 */
+}
+/* 搜索框样式 4 sy */       /* 注释：搜索框样式，作者/版本标记 */
+.search-box{                /* 搜索框容器 */
+  max-width: 600px;         /* 最大宽度：600像素 */
+  margin: 20px auto;        /* 上下外边距20px，左右自动居中 */
+  text-align: center;       /* 文字/内容水平居中 */
+}
+#searchInput{                /* 搜索输入框 */
+  width: 70%;                /* 宽度：父容器的70% */
+  padding: 10px 15px;        /* 内边距：上下10px，左右15px */
+  border: 1px solid #ddd;    /* 边框：1px 实线 浅灰色 */
+  border-radius: 20px 0 0 20px;  /* 圆角：左上角、左下角20px，右边直角 */
+  font-size: 16px;           /* 字体大小：16像素 */
+  outline: none;             /* 聚焦时去掉默认蓝色边框 */
+}
+.search-box button{          /* 搜索框里的按钮 */
+  padding: 10px 20px;        /* 内边距：上下10px，左右20px */
+  border: none;              /* 无边框 */
+  background: #3462f8;        /* 背景色：蓝色 */
+  color: #fff;               /* 文字颜色：白色 */
+  border-radius: 0 20px 20px 0;  /* 圆角：右上角、右下角20px */
+  cursor: pointer;           /* 鼠标悬浮变成小手 */
+  font-size: 16px;           /* 字体大小：16像素 */
+}
+.search-box button:hover{    /* 鼠标悬浮在搜索按钮上时 */
+  background: #254edb;       /* 背景色变成深蓝色 */
+}
+/*购物车商品分类 5 */
+.cate-nav{
+  text-align:center;
+  margin:20px 0;
+}
+.cate-btn{
+  padding:8px 16px;
+  margin:0 5px;
+  border:none;
+  background:#eee;
+  border-radius:6px;
+  cursor:pointer;
+}
+.cate-btn.active{
+  background:#3462f8;
+  color:#fff;
+}
+</style>
+<body>
+    <div class="header"><!--产品详情的大盒子包到第二个/div-->
+  <h1>产品详情</h1>
+  <div class="nav"> <!--导航栏-->
+  <a href="index.html">首页</a>
+  <a href="product.html">产品</a>
+  <a href="cart.html">购物车</a>
+  <a href="lookorder.html">订单</a>
+  <a href="contact.html">联系我们</a>
+  <a href="message.html">留言板</a>
+  <span id="loginInfo" style="color:#fff; margin-left:10px;"></span><!--注册登录链接-->
+</div>
+</div>
+<!-- 购物车商品分类导航 5 -->
+<div class="cate-nav">
+  <button class="cate-btn active" data-filter="all">全部商品</button>
+  <button class="cate-btn" data-filter="dianzi">电子产品</button>
+  <button class="cate-btn" data-filter="fushi">服饰穿搭</button>
+  <button class="cate-btn" data-filter="life">生活用品</button>
+</div>
+<!-- 商品搜索框 4 sy -->
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="输入商品名称搜索...">
+  <button onclick="searchGoods()">搜索</button><!--sG搜索商品（函数名）/（）执行.调用-->
+</div>
+<div id="cartWrap"><!--购物车搜索-->
+<div id="goodsContainer"><!-- 商品搜索框 id 4 sy -->
+<div class="product-list"><!--包裹全部商品图片卡片的大盒子-->
+<div class="product-item" data-name="同年照片" data-cate="fushi"> <!--卡片盒子名字--><!--data-name="同年照片" 搜索框id 4 sy /data-cate="fushi"购物车分类 5 -->
+  <!--商品卡片-->
+  <img src="1.jpeg" data-name="同年照片" onclick="openImage(this.src)"><!--onclick鼠标点击时，执行一段动作/代码。加openImage是给JS起的名字 -->
+  <h3>同年照片</h3>
+  <div class="price">¥ 99.00</div><!--class="price"给CSS起的名字-->
+  <button class="buy-btn" onclick="showModal('同年照片',99.00)">立即购买</button><!--class="buy-btn"给CSS起的名字-->
+  &nbsp; <!-- 加个间距 -->
+  <button class="buy-btn" onclick="addToCart('同年照片',99.00,'fushi')">加入购物车</button><!--购物车按钮 /,'fushi'购物车分类 5-->
+</div>
+<div class="product-item" data-name="我的汉服照片" data-cate="life"><!--class="product-item""给CSS起的名字-->
+  <img src="3.jpeg" data-name="我的汉服照片" onclick="openImage(this.src)">
+  <h3>我的汉服照片</h3>
+  <div class="price">¥ 99.00</div>
+  <button class="buy-btn" onclick="showModal('我的汉服照片',99.00)">立即购买</button>
+  &nbsp; <!-- 加个间距 -->
+  <button class="buy-btn" onclick="addToCart('我的汉服照片',99.00,'life')">加入购物车</button>
+</div>
+<div class="product-item" data-name="星空银河系" data-cate="dianzi">
+  <img src="5.jpeg" data-name="星空银河系" onclick="openImage(this.src)">
+  <h3>星空银河系</h3>
+  <div class="price">¥ 99.00</div>
+  <button class="buy-btn" onclick="showModal('星空银河系',99.00)">立即购买</button>
+  &nbsp;
+  <button class="buy-btn" onclick="addToCart('星空银河系',99.00,'dianzi')">加入购物车</button>
+</div>
+<div class="product-item" data-name="我自己漂亮吗" data-cate="fushi">
+  <img src="9.jpg" data-name="我自己漂亮吗" onclick="openImage(this.src)">
+  <h3>我自己漂亮吗</h3>
+  <div class="price">¥ 99.00</div>
+  <button class="buy-btn" onclick="showModal('我自己漂亮吗',99.00)">立即购买</button>
+  &nbsp;
+  <button class="buy-btn" onclick="addToCart('我自己漂亮吗',99.00,'fushi')">加入购物车</button>
+</div>
+</div>
+</div>
+</div><!--产品详情的大盒子包到第二个/div-->
+<!-- 下单弹窗 -->
+<div id="orderModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);" onclick="closeModal()">
+  <div style="background:white; max-width:500px; margin:100px auto; padding:30px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.2); text-align:center;" onclick="event.stopPropagation()"><!--e事件（比如点击.鼠标移动等） /s停止阻止 /PG阻止传播-->
+    <h3>下单</h3>
+    <p id="currentBuyProduct" style="color:red; font-weight:bold;"></p><!--CBP当前购买的商品 /c颜色 /fw文字 /b加粗-->
+    <input type="text" id="buyName" placeholder="请输入姓名" style="width:100%; padding:10px; margin:10px 0;"><br>
+    <input type="text" id="buyPhone" placeholder="请输入电话" style="width:100%; padding:10px; margin:10px 0;"><br>
+    <textarea id="buyAddress" placeholder="请输入收货地址" style="width:100%; padding:10px; margin:10px 0; height:80px;"></textarea><br>
+    <p>购买数量：<input type="number" id="buyCount" value="1" min="1" style="width:60px; padding:5px;"></p><!--总价统计-->
+    <button onclick="submitOrder()" style="margin-right:10px;">确认下单</button>
+    <button onclick="closeModal()">取消</button>
+  </div>
+</div>
+
+    <script>
+// 点击图片放大查看
+function openImage(src) {
+  let lightbox = document.createElement("div");
+  lightbox.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;justify-content:center;align-items:center;";
+  lightbox.onclick = function(){ lightbox.remove() };
+
+  let img = document.createElement("img");
+  img.src = src;
+  img.style.cssText = "width:auto;height:100vh;object-fit:contain;";
+
+  lightbox.appendChild(img);
+  document.body.appendChild(lightbox);
+}
+function openModal() {
+  document.getElementById('orderModal').style.display = 'block';
+}
+function closeModal() {
+  document.getElementById('orderModal').style.display = 'none';
+}
+//下单弹窗
+let currentProduct = "";//c当前 /p产品 /“”空字符串
+let currentPrice = 0;//pe价格
+
+function showModal(productName, productPrice) {//s显示 /m弹窗 /p产品 /N名称 /pe价格
+   //挡住未注册就购买
+  if (!localStorage.getItem("loginUser")) {//i如果 ！没有.不.非 /lS浏览器本地存储 /g获取.取出 /I项.数据 /（"lo登录用户信息
+  alert("请先登录再购买！");//a弹出提示框
+  location.href = "login.html";//lt当前网页地址 h链接.跳转 /l登录 /h页面
+  return;//r返回.停止执行
+}
+  currentProduct = productName;//c当前 /p产品 = p产品 /N名称
+  currentPrice = productPrice;//c当前 /pe价格 = /p产品 /pc价格
+  // 把产品名显示在弹窗里
+  document.getElementById("currentBuyProduct").textContent = "您正在购买：" + productName + " ¥" + productPrice + ".00";//cbp当前购买商品 /t文字内容 /+连接.拼接 /pN商品名称 /pN商品价格
+  document.getElementById("orderModal").style.display = "block";//o订单弹窗 /d显示方式 /b块级.显示出来
+}
+function submitOrder() {//改订单邮箱接口   //s提交 /O订单  /（）备注
+  let name = document.getElementById("buyName").value.trim();//值 /t（）去除首尾
+  let phone = document.getElementById("buyPhone").value.trim();
+  let address = document.getElementById("buyAddress").value.trim();
+  if (!name || !phone || !address) { //i如果 /！非.没有.为空 /||或者
+    alert("请填写完整信息");//a弹窗提示框
+    return;//返回.停止
+  }
+
+  let count = document.getElementById('buyCount').value * 1;//c数量.计数.个数 /v值 输入框里的内容 /*乘号 /1数字1
+  let order = {//o订单
+    name: name,//n姓名
+    phone: phone,//p电话
+    address: address,//a地址
+    product: currentProduct,//c当前的 /p产品
+    price: currentPrice,//pc价格
+    count: count,//c数量
+    time: new Date().toLocaleString(),//t时间 /n新的 /D日期 /（）执行.调用 /t转换为 /l本地.当地/S字符串.文本
+    total: (currentPrice * count).toFixed(2),//t总计.总价 /c当前 /p价格 /*乘 /c数量 /t保留小数.固定位数 /2保留2位小数
+    status:"待付款"  //新增：下单默认待付款 /s状态
+  };
+
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];//o订单列表.所有订单 /J把字符串转成数组.对象 /l浏览器本地存储 /获取数据 /名叫orders的数据 /【】空数据
+  orders.push(order);//p添加.放进
+  localStorage.setItem("orders", JSON.stringify(orders));//s保存数据 /J转成可保存的字符串
+
+  // ======================传送qq邮箱
+  // ✅ 最终版：自动发邮件到你QQ邮箱
+  // ======================
+  let yourEmail = "1736416201@qq.com"; // 你自己的邮箱
+  let mailSubject = `【新订单】${order.product} x${order.count}件`;
+  let mailBody = `
+您收到一个新订单！
+------------------------
+产品名称：${order.product}
+单价：¥${order.price}.00
+数量：${order.count}件
+小计：¥${order.total}
+------------------------
+客户姓名：${order.name}
+联系电话：${order.phone}
+收货地址：${order.address}
+下单时间：${order.time}
+  `;
+
+  // 直接唤起邮箱发送
+  window.open(`mailto:${yourEmail}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`);
+
+  alert("下单成功！订单已发到您的邮箱。");
+  closeModal();
+}
+// 显示登录状态  //注册登录链接
+function showLoginStatus() {//f定义函数.功能 /s显示 /L登录 /S状态
+  let user = localStorage.getItem("loginUser");//l定义.创建 /u用户名（变量） /l浏览器本地存储 /g取出.获取 /l名字叫（"lo的数据
+  let info = document.getElementById("loginInfo");//i信息.提示文字 /d网页文档 /gd通过id查找元素 /l ID叫（"lo的标签
+  if (user) {//i如果 /u用户名存在
+    info.innerHTML = `欢迎，${user} <a href="javascript:logout()" style="color:#ff0;">退出</a>`;//i刚才找到的.显示信息盒子 /i往盒子里写入HTML内容 /`反引号,包裹一段文字+代码 /${插入登录的用户名（变量）/ht（）点击后执行退出函数 /c颜色 /#黄色
+  } else {//e否则.如果不满足上面的条件
+    info.innerHTML = `<a href="login.html" style="color:#fff;">登录</a> | <a href="register.html" style="color:#fff;">注册</a>`;//f显示信息的盒子 /i写入HTML内容 /`包裹内容+字段代码 /hl跳转到登录页面的链接 /c颜色 /#f白色 /|竖线.分隔符号 /hl跳转到注册页面的链接
+  }
+}
+
+// 退出登录
+function logout() {//lo退出登录 /（l注销 /o退出
+  localStorage.removeItem("loginUser");//lS浏览器本地存储 /r删除 /I数据 /（"lo名为lo的数据
+  alert("已退出登录");//a弹出提示框
+  location.reload();//l当前网页 /r（）刷新.重新加载
+}
+
+// 页面加载就执行
+window.onload = function() {//w浏览器窗口.整个网页 /o加载完成时 /f（）诺名函数.要执行的代码
+  showLoginStatus();//s显示 /l登录 /S状态 /（）执行.调用
+}
+
+//商品筛选  3
+const cateBtns = document.querySelectorAll('.cate-btn');
+//c常量 /ca分类（category缩写）/B按钮（按钮 缩写）/d网页文档 /qSA查询选择全部元素/cb类名为的元素
+// 只选中商品容器内的图片，绝对不影响页面其他元素 
+const goodsImgs = document.querySelectorAll('#goodsContainer .product-item');
+//c常量 /g商品 /I图片（ima缩写）/d网页文档 /qSA查询所有.选中全部 /#gid名 /i图片标签 /[d id名
+
+cateBtns.forEach(btn => {//c分类 /B按钮 /f遍历 /E挨个循环 /b单个按钮
+  btn.addEventListener('click', function() {//aLR添加事件监听 /c点击 /f函数.执行代码
+    // 切换按钮高亮
+    cateBtns.forEach(b => b.classList.remove('active'));
+    //c分类 /B按钮 /f遍历E挨个循环 /b每一个按钮（简写）/b按钮 /c类名列表 /r删除.移除 /a激活.高亮样式
+    this.classList.add('active');//t当前点击的这个按钮 /c类名列表 /ad添加 /a激活.高亮样式
+
+    // 获取当前选中的分类
+    const selectFilter = this.getAttribute('data-filter');//c常量 /s选择.选中 /F筛选.过漉 /t当前点击的按钮 /gt获取属性 /df自定义的筛选属性
+
+
+    // 只遍历商品容器内的图片，其他元素完全不受影响
+   goodsImgs.forEach(item => {
+  if (selectFilter === 'all' || item.dataset.cate === selectFilter) {
+    item.style.display = 'inline-block';   // 这里！
+  } else {
+    item.style.display = 'none';           // 这里！
+  }
+});
+  });
+});
+function addToCart(name, price, cate) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let has = cart.find(item => item.name == name);
+  if (has) {
+    has.count++;
+  } else {
+    // 新增cate字段，把分类存进去
+    cart.push({ name: name, price: price, count: 1, cate: cate });
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("已加入购物车");
+}
+  // 购物车分类搜索功能 5
+function searchGoods() {
+  let inputRaw = document.getElementById('searchInput').value.trim().toLowerCase();
+  const goodsItems = document.querySelectorAll('#goodsContainer .product-item');
+
+  if (!inputRaw) {
+    goodsItems.forEach(item => item.style.display = 'inline-block');
+    return;
+  }
+  const keys = inputRaw.split(/\s+/).filter(k=>k);
+
+  goodsItems.forEach(item => {
+    const name = item.dataset.name.toLowerCase();
+    const isMatch = keys.some(key => name.includes(key));
+    if (isMatch){
+      item.style.display = 'inline-block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+// 支持回车搜索
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    searchGoods();
+  }
+});
+
+</script>
+<div class="footer">
+  © 2026 我的产品展示 - 保留所有权利
+</div>
+</body>
+</html>

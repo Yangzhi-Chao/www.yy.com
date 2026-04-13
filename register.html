@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>用户注册</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .box{ /* 这是给页面里的【卡片盒子】设置样式 */
+  background:white;           /* 背景：白色 */
+  max-width:400px;            /* 最大宽度：400像素（不会太宽） */
+  margin:30px auto;           /* 上下留30px空白，左右自动居中 */
+  padding:30px;               /* 内边距：内容四周留30px空白 */
+  border-radius:15px;         /* 圆角：边角变圆，15像素 */
+  box-shadow:0 2px 10px rgba(0,0,0,0.1); /* 阴影：淡淡的灰色阴影 */
+}
+   input{ /* 这是设置 【输入框】 的样式 */
+  width:100%;            /* 宽度：占满整个盒子一行 */
+  padding:12px;          /* 内边距：输入框里留12px空白，好打字 */
+  margin:10px 0;         /* 上下各空10px，输入框之间不挤在一起 */
+  border:1px solid #ddd; /* 边框：1像素浅灰色边框 */
+  border-radius:8px;     /* 圆角：8像素，输入框边角变圆好看 */
+  font-size:16px;        /* 字体大小：16像素，手机电脑都清晰 */
+}
+   button{/* 这是设置 【按钮】 的样式 */
+  background:#3462f8;    /* 背景色：蓝色（好看的官方蓝） */
+  color:white;           /* 文字颜色：白色 */
+  border:none;           /* 去掉默认边框，不要边框 */
+  padding:12px;          /* 按钮内部上下左右留白12px */
+  width:100%;            /* 按钮宽度占满一整行 */
+  border-radius:8px;     /* 按钮圆角8px，更美观 */
+  font-size:16px;        /* 文字大小16px，清晰 */
+  cursor:pointer;        /* 鼠标放上去变成小手 */
+  margin-top:10px;       /* 按钮上面空10px，不挤 */
+}
+    a{/* 这是设置 【链接文字】 的样式 */
+  color:#3462f8;       /* 文字颜色：蓝色（和按钮一样的蓝色） */
+  text-decoration:none;/* 去掉下划线！ */
+}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>用户注册</h2>
+    <input type="text" id="username" placeholder="请输入用户名"><!--i输入框 /y类型 /t文字 /i给输入框起的编号.名字 /p输入框里灰色提示文字-->
+    <input type="password" id="pwd" placeholder="请输入密码"><!--p密码输入框（输入的内容会变成小黑点，看不见明文）-->
+    <input type="password" id="repwd" placeholder="请确认密码">
+    <button onclick="register()">注册</button>
+    <p>已有账号？<a href="login.html">去登录</a></p>
+  </div>
+
+  <script>
+    function register() {//r注册 /()函数的标准 /{}里面放注册要做的事
+      let user = document.getElementById("username").value.trim();//lu创建一个叫 user 的变量，用来存用户名 /d整个网页 /ge")找到 id="username" 的输入框 /v拿到输入框里你打的文字 /t()去掉前后多余的空格（比如不小心按的空格）
+      let pwd = document.getElementById("pwd").value;//p创建一个叫 pwd 的变量，用来存密码 /d整个网页 /gd")找到 id="pwd" 的密码输入框 /v拿到输入框里输入的密码内容
+      let repwd = document.getElementById("repwd").value;
+
+      if(!user || !pwd || !repwd){//i如果 /!u p r 没填 /||或
+        alert("请填写完整信息");//a弹出提示框，告诉用户要填完整
+        return;//r停止执行
+      }
+      if(pwd !== repwd){//i如果 /p第一次输入 ！==不等于 r第二次输入的确认密码
+        alert("两次密码不一致");//a弹出提示框
+        return;//r停止.不往下执行
+      }
+
+      // 读取已有用户
+      let users = JSON.parse(localStorage.getItem("users")) || [];//l声明.创建 /u用户列表.变量名 /Jp把字符串 → 转回数组 / 对象 /lS浏览器本地存储 /gI取出.获取 /（"u名字叫（"u的数据 /||或 /[]空数组
+      // 判断是否重名
+      let has = users.find(u => u.user === user);//h存在.有 /u用户数组.所有用户 /f查找.寻找 /u每一个用户（零时名字） /=>指向.满足条件 /u该用户的名字 /=完全等于 /u当前输入的用户名
+      if(has){//i如果 /h查找到的用户
+        alert("用户名已存在");//a弹出提示框
+        return;//r返回.停止执行
+      }
+
+      // 加入用户数组
+      users.push({ user: user, pwd: pwd });//u用户数组 /p添加.塞进 /u账号名（键名） /:对应 /u输入的用户名 /p密码（键ming) /：对应 /p输入的密码
+      localStorage.setItem("users", JSON.stringify(users));//lS浏览器本地存储 /s保存.存入 /（"u 名字叫u /Js转成字符串 u用户数组
+
+      alert("注册成功！请登录");//弹出提示框
+      location.href = "login.html";//l当前网页地址 /h跳转地址 =设置为 /l登录 /h网页
+    }
+  </script>
+</body>
+</html>

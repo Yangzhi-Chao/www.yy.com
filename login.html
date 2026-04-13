@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>用户登录</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .box{
+      background:white;
+      max-width:400px;
+      margin:30px auto;
+      padding:30px;
+      border-radius:15px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+    input{
+      width:100%;
+      padding:12px;
+      margin:10px 0;
+      border:1px solid #ddd;
+      border-radius:8px;
+      font-size:16px;
+    }
+    button{
+      background:#3462f8;
+      color:white;
+      border:none;
+      padding:12px;
+      width:100%;
+      border-radius:8px;
+      font-size:16px;
+      cursor:pointer;
+      margin-top:10px;
+    }
+    a{
+      color:#3462f8;
+      text-decoration:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>用户登录</h2>
+    <input type="text" id="username" placeholder="用户名"><!--p输入框里的灰色提示文字-->
+    <input type="password" id="pwd" placeholder="密码"><!--p密码输入框，输入内容会变成小圆点隐藏-->
+    <button onclick="login()">登录</button>
+    <p>没有账号？<a href="register.html">注册</a></p>
+  </div>
+
+  <script>
+    function login() {//l登录
+      let user = document.getElementById("username").value.trim();//u用户名（变量） /d整个网页gd通过id找到元素 /uID 为 username 的输入框 /v里面输入的内容 /t()去掉前后空格
+      let pwd = document.getElementById("pwd").value;//p密码（变量名） /d整个网页 /gd通过id获取元素 /pID为p的元素 /v输入的值.内容
+
+      if(!user || !pwd){//i如果 /!u非.不是 /\\或
+        alert("请填写完整信息");//a弹出提示框
+        return;//r返回.停止执行
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];//u用户名(变量) /Jp把字符串转回数组.对象 /lS浏览器本地存储 /取出数据 /u名为u的数据 /||或[]空数组
+      let find = users.find(u => u.user === user && u.pwd === pwd);//f找到.查找到 /u所有注册的用户数组 /f查找.寻找 /u数据里的每一个用户 /=>满足条件 /u这个用户的账号 /=完全等于 /u你输入的账号 /&并且 /u这个用户的密码 /=完全等于 /p你输入的密码
+      if(!find){//i如果 /！f没有找到
+        alert("用户名或密码错误");//弹出提示框
+        return;//r返回.停止执行
+      }
+
+      // 登录成功，记录登录状态
+      localStorage.setItem("loginUser", user);//lS浏览器本地存储 /s保存.存储 /lU存储的名字叫:登录用户 /u当前登录的用户名
+      alert("登录成功！");//a弹出提示框
+      location.href = "index.html";//l当前网页的地址.位置 h跳转.链接地址 /i首页 /h文件
+    }
+  </script>
+</body>
+</html>

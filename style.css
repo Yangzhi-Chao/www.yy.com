@@ -1,0 +1,72 @@
+/*  style.css 样式*/
+/* 全局样式：初始化所有元素，清除默认样式 */
+* {
+  margin: 0;    /* 外边距：0（清除所有元素默认的外边距） */
+  padding: 0;   /* 内边距：0（清除所有元素默认的内边距） */
+  box-sizing: border-box; /* 盒子模型：边框盒（让宽高计算更稳定，不撑破页面） */
+}
+body {
+  text-align: center;      /* 文字、内容 居中 */
+  background: #f5f5f5;     /* 背景色：浅灰色 */
+  color: #333;             /* 文字颜色：深灰色 */
+  font-family: "微软雅黑", sans-serif;  /* 字体：微软雅黑 */
+  line-height: 1.6;         /* 行高：文字行间距更舒服 */
+}
+.nav {
+  text-align: center;      /* 文字居中 */
+  margin: 20px 0;          /* 上下外边距 20px（留出空白），左右 0 */
+  background: #3462f8;     /* 背景颜色：蓝色 */
+  padding: 12px;           /* 内边距 12px（让导航栏变高、不拥挤） */
+  border-radius: 30px;     /* 圆角 30px（让导航栏变成大圆角，好看） */
+}
+.nav a {
+  margin: 0 12px;      /* 上下间距0，左右间距12px（链接之间拉开距离） */
+  font-size: 16px;     /* 字体大小：16像素 */
+  color: #fff;         /* 文字颜色：白色 */
+  text-decoration: none;/* 文字装饰：无（去掉链接默认的下划线） */
+}
+.nav a:hover {
+  color: red;      /* 鼠标放上去，文字变成 红色 */
+  font-weight: bold;/* 文字变成 加粗 */
+}
+.header {
+  text-align: center;            /* 文字、内容 水平居中 */
+  padding: 20px;                 /* 内边距 20px（让内容不贴着边） */
+  background: #fff;              /* 背景颜色：白色 */
+  margin-bottom: 20px;           /* 底部外边距 20px（和下面内容拉开距离） */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 阴影：淡淡的灰色阴影，有立体感 */
+}
+.footer {
+  text-align: center;      /* 文字 水平居中 */
+  padding: 15px;          /* 内边距 15px（上下左右撑开） */
+  margin-top: 30px;       /* 距离上面的内容 30px 空隙 */
+  color: #666;           /* 文字颜色：灰色 */
+  font-size: 14px;       /* 文字大小：14px（小字） */
+}
+button {
+  padding: 8px 16px;    /* 内边距：上下8px，左右16px → 让按钮变大、不挤 */
+  background: #3462f8;  /* 背景色：蓝色 */
+  color: #fff;          /* 文字颜色：白色 */
+  border: none;         /* 边框：无 → 去掉默认边框 */
+  border-radius: 6px;   /* 圆角：6px → 按钮边角变圆 */
+  cursor: pointer;      /* 鼠标移上去：变成小手图标 */
+  margin: 5px;          /* 外边距：5px → 按钮之间留空隙 */
+}
+input, textarea {
+  padding: 10px;          /* 内边距：10px → 文字不贴着边框 */
+  border: 1px solid #ddd; /* 边框：1像素 实线 浅灰色 */
+  border-radius: 6px;     /* 圆角：6px → 边角变圆 */
+  font-size: 16px;        /* 文字大小：16像素 */
+  width: 100%;            /* 宽度：占满父容器 */
+  max-width: 500px;       /* 最大宽度：不超过500px（不会太宽） */
+  margin: 8px 0;          /* 外边距：上下8px，左右0 → 上下留空隙 */
+}
+.order-item, .cart-item {
+  background: white;                    /* 背景：白色 */
+  max-width: 600px;                     /* 最大宽度：600px（不会太宽） */
+  margin: 15px auto;                    /* 上下间距15px，左右自动居中 */
+  padding: 20px;                        /* 内边距20px（内容不贴边） */
+  border-radius: 12px;                  /* 圆角12px（好看） */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);/* 淡淡的阴影（立体卡片效果） */
+  text-align: left;                     /* 文字左对齐 */
+}

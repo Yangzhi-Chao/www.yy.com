@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF8">
+<title>购物车</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* 导航栏样式 6 */
+.nav {                     /* 导航栏整体样式 */
+  text-align: center;      /* 文字 水平居中 */
+  margin: 20px 0;          /* 上下外边距 20px（上下留空），左右 0 */
+  background: #3462f8;      /* 背景颜色：蓝色 */
+  padding: 12px;           /* 内边距 12px（内容和边框之间留空） */
+  border-radius: 30px;     /* 圆角 30px（让导航栏变成大圆角） */
+}
+.nav a {                     /* 导航栏里的 链接 */
+  margin: 0 12px;           /* 上下间距0，左右间距12px（让链接不挤在一起） */
+  font-size: 16px;          /* 文字大小：16像素 */
+  color: #fff;              /* 文字颜色：白色 */
+  text-decoration: none;     /* 去掉下划线（链接默认有下划线，这里删掉） */
+}
+.nav a:hover {          /* 鼠标 放到 导航链接 上面时 */
+  color: red;           /* 文字颜色 变成 红色 */
+  font-weight: bold;    /* 文字 变成 加粗 */
+}
+
+body {                     /* 网页整体样式 */
+  text-align: center;      /* 文字和内容 水平居中 */
+  background: #f5f5f5;      /* 背景颜色：浅灰色 */
+  color: #333;             /* 文字颜色：深灰色 */
+}
+  .cart-item {
+    background: white;
+    max-width: 500px;
+    margin: 10px auto;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .total {
+    font-size: 20px;
+    color: red;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+  /* 搜索框样式 */       /* 注释：搜索框样式，作者/版本标记 */
+.search-box{                /* 搜索框容器 */
+  max-width: 600px;         /* 最大宽度：600像素 */
+  margin: 20px auto;        /* 上下外边距20px，左右自动居中 */
+  text-align: center;       /* 文字/内容水平居中 */
+}
+#searchInput{                /* 搜索输入框 */
+  width: 70%;                /* 宽度：父容器的70% */
+  padding: 10px 15px;        /* 内边距：上下10px，左右15px */
+  border: 1px solid #ddd;    /* 边框：1px 实线 浅灰色 */
+  border-radius: 20px 0 0 20px;  /* 圆角：左上角、左下角20px，右边直角 */
+  font-size: 16px;           /* 字体大小：16像素 */
+  outline: none;             /* 聚焦时去掉默认蓝色边框 */
+}
+.search-box button{          /* 搜索框里的按钮 */
+  padding: 10px 20px;        /* 内边距：上下10px，左右20px */
+  border: none;              /* 无边框 */
+  background: #3462f8;        /* 背景色：蓝色 */
+  color: #fff;               /* 文字颜色：白色 */
+  border-radius: 0 20px 20px 0;  /* 圆角：右上角、右下角20px */
+  cursor: pointer;           /* 鼠标悬浮变成小手 */
+  font-size: 16px;           /* 字体大小：16像素 */
+}
+.search-box button:hover{    /* 鼠标悬浮在搜索按钮上时 */
+  background: #254edb;       /* 背景色变成深蓝色 */
+}
+/*购物车商品分类 5 */
+.cate-nav{
+  text-align:center;
+  margin:20px 0;
+}
+.cate-btn{
+  padding:8px 16px;
+  margin:0 5px;
+  border:none;
+  background:#eee;
+  border-radius:6px;
+  cursor:pointer;
+}
+.cate-btn.active{
+  background:#3462f8;
+  color:#fff;
+}
+/*按钮样式 6 */
+button {                    /* 按钮 整体样式 */
+  padding: 8px 16px;       /* 内边距：上下8px，左右16px（让按钮变大点） */
+  background: #3462f8;     /* 背景颜色：蓝色 */
+  color: #fff;             /* 文字颜色：白色 */
+  border: none;            /* 边框：无（去掉默认边框） */
+  border-radius: 6px;      /* 圆角：6px（按钮边角变圆） */
+  cursor: pointer;         /* 鼠标放上去：变成小手图标 */
+  margin: 5px;             /* 外边距：5px（按钮之间留空隙） */
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav"><!--导航栏 /n导航栏样式名字-->
+  <a href="index.html">首页</a>
+  <a href="product.html">产品</a>
+  <a href="cart.html">购物车</a>
+  <a href="lookorder.html">订单</a>
+  <a href="contact.html">联系我们</a>
+  <a href="message.html">留言板</a>
+  <span id="loginInfo" style="color:#fff; margin-left:10px;"></span><!--注册登录链接-->
+</div>
+
+<h1>购物车</h1><!--购物车-->
+<!-- 购物车商品分类导航 5 -->
+<div class="cate-nav">
+  <button class="cate-btn active" data-filter="all">全部商品</button>
+  <button class="cate-btn" data-filter="dianzi">电子产品</button>
+  <button class="cate-btn" data-filter="fushi">服饰穿搭</button>
+  <button class="cate-btn" data-filter="life">生活用品</button>
+</div>
+<!-- 商品搜索框-->
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="输入商品名称搜索...">
+  <button onclick="searchGoods()">搜索</button><!--sG搜索商品（函数名）/（）执行.调用-->
+</div>
+<div id="cartWrap"><!-- 商品搜索框 -->
+<div id="goodsContainer"><!-- 商品搜索框 -->
+<div id="cartList"></div><!--列表-->
+<div class="total" id="totalPrice"></div><!--总计-->
+
+<button onclick="clearCart()">清空购物车</button>
+<button onclick="toBuy()">去结算</button>
+<button onclick="location.href='product.html'">继续购物</button>
+</div>
+</div>
+
+<script>
+// 加载购物车
+function loadCart() {//l加载.读取 /C购物车 /（）函数括号
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];//J数据格式 /p解析.还原 /l浏览器 /S本地存储 /g获取.取出 /（ca）名字叫ca的数据 /[]空数组
+  let list = document.getElementById("cartList");//l列表（变量.用来装购物车商品列表）
+  list.innerHTML = "";//l购物车列表容器 /.的 /i内部的H内容 /""空字符串.什么都没有
+
+  let total = 0;//t总计.总价 /0初始值为0
+
+  cart.forEach((item, index) => {//c购物车数组 /f遍历. /E循环每一项 /i当前的商品项 /i商品的序号（位置） /=>箭头符号（箭头函数）
+    let subtotal = item.price * item.count;//s小计.每个商品的总价 /i商品 /p单价 /i商品 /c数量
+    total += subtotal;//t购物车商品的总价格 /+=把右边的数加到左边并保存结果 /s当前这个商品的小计金额
+
+    list.innerHTML += `
+      <div class="cart-item" data-name="${item.name}" data-cate="${item.cate}">
+        <p>商品：${item.name}</p>
+        <p>单价：${item.price} 元</p>
+        <p>
+          数量：
+          <button onclick="changeCount(${index}, -1)">-</button>
+          ${item.count}
+          <button onclick="changeCount(${index}, 1)">+</button>
+        </p>
+        <p>小计：${subtotal} 元</p>
+        <button onclick="delItem(${index})">删除</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("totalPrice").innerText = "总计：" + total + " 元";//i元素里显示的文字 /t总价格 /+拼接文字 /元固定单位文字
+}
+
+// 数量加减
+function changeCount(index, num) {//cC修改商品数量 /i商品在购物车里的位置序号 /n要变化的数字（+1或—1）
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];//c购物车数据 /J数据格式 /p解析.还原 /l本地S存储 /g获取 /l数据 /（ca名为ca的数据
+  cart[index].count += num;//c购物车数组 /[]通过序号取数据 /c数量 /+=加上.累加 /n变化的数字（+1或—1）
+  if (cart[index].count < 1) cart[index].count = 1;//i如果 /购物车 /[i]第几个商品 /c数量 /<小于 /1数字1 
+  localStorage.setItem("cart", JSON.stringify(cart));//l本地 /S存储 /s设置 /I项 /c购物车（键名） /J数据格式 /s转字符串 /c购物车数组
+  loadCart();//l加载 /C购物车
+}
+
+// 删除单个商品
+function delItem(index) {//d删除 /l项目.商品 /i序号.位置
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];//c购物车 /数据格式 /p解析.还原 /l本地 /S存储 /g获取 /l项 []空数组  
+  cart.splice(index, 1);//c购物车 /s删除（数组的删除方法） /i商品的位置序号 /1删除的数量1个
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+// 清空购物车
+function clearCart() {//c清空 /C购物车 /（）函数
+  if (confirm("确定清空购物车？")) {//i如果 /c弹窗确认框 /确定....提示文字
+    localStorage.removeItem("cart");//l本地 /S存储 /r移除.删除 /l项.数据 /c购物车数据
+    loadCart();//l加载 /（执行函数
+  }
+}
+
+// 去结算：把购物车商品生成订单
+function toBuy() {//t去 /B购买 /（）函数 /{开始
+  //挡住未注册就购买
+if (!localStorage.getItem("loginUser")) {//i如果 /！没有.不.非 /le浏览器本地存储 /g获取.取得 /I项.数据 /（'lo登录用户信息
+  alert("请先登录再结算！");//a弹出提示框
+  location.href = "login.html";//lt网页地址 /h跳转 /l登录 /h页面
+  return;//r返回.停止执行
+}
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];//c购物车 /J数据格式 /p解析 l本地 /S存储 /g获取 /l项 /||或 /[]空数组
+  if (cart.length === 0) {//i如果 /c购物车 /l长度.数量 /=等于 /0零 /{开始
+    alert("购物车是空的");//a弹出同时
+    return;//返回.停止执行
+  }
+
+  // 弹出下单弹窗，让用户填写信息
+  let modal = document.createElement("div");//m弹窗.弹出层 /d网页文档 /c创建 /E元素
+  modal.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;justify-content:center;align-items:center;";
+  //m弹出.弹出层 /s样式 /cCSS样式代码 /p定位方式 /f固定定位 /t距离顶部 /l距离左侧 /w宽度 /h高度
+  //m弹窗.弹出层 /i里面的HTML内容 /` 模板字符串开始（用来写多行 HTML 内容）
+  modal.innerHTML = `
+    <div style="background:white; max-width:500px; padding:30px; border-radius:15px; text-align:center;">
+      <h3>确认订单</h3>
+      <input type="text" id="orderName" placeholder="请输入姓名" style="width:100%; padding:10px; margin:10px 0;">
+      <input type="text" id="orderPhone" placeholder="请输入电话" style="width:100%; padding:10px; margin:10px 0;">
+      <textarea id="orderAddress" placeholder="请输入收货地址" style="width:100%; padding:10px; margin:10px 0; height:80px;"></textarea>
+      <button onclick="submitCartOrder()" style="margin-right:10px;">确认下单</button>
+      <button onclick="this.parentElement.parentElement.remove()">取消</button>
+    </div>
+  `;
+  document.body.appendChild(modal);//d网页文档 /b网页主体 /a添加 /C子元素 /弹窗.弹出层 /}函数结束
+}
+
+// 提交购物车订单（修复版，直接替换整个函数）
+function submitCartOrder() {//s提交 /C购物车 /O订单 /（）函数括号 /{函数开始
+  let name = document.getElementById("orderName").value.trim();//n姓名 /d网页文档 /g获取 /E元素 /B通过 /id编号 /v输入的值 /t去除空格 /（）执行方式
+  let phone = document.getElementById("orderPhone").value.trim();
+  let address = document.getElementById("orderAddress").value.trim();
+  if (!name || !phone || !address) {
+    alert("请填写完整信息");//a弹出提示框
+    return;//r返回.停止代码执行
+  }
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];//c购物车 /J数据格式 /p解析.还原 l本地 S存储 /g获取 /I项 /c购物车 /||或 /[]空数组
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];//o订单列表.多个订单
+
+  // 把购物车的每个商品都生成订单
+  cart.forEach(item => {//c购物车 /f对于.循环 /E每一个 /i每一个.（每一件商品） /=>箭头函数(执行操作) /{开始执行
+    let order = {//o订单 /对象开始（包裹订单数据）
+      name: name,//n名称
+      phone: phone,//p电话
+      address: address,//a地址
+      product: item.name,//p商品名称 /i项 /n名称
+      price: item.price, //p价格 /i项
+      count: item.count,//c数量
+      time: new Date().toLocaleString(),//t时间 /n新的 /D日期 /t转为本地字符串
+      total: (item.price * item.count).toFixed(2),//t总价 /i项 /p价格 /c数量 /t保留小数 /（2）保留两位小数
+      status:"待付款"  //新增：下单默认待付款 /s状态
+    };
+    orders.push(order);//o订单数组 /p添加 /o订单对象
+  });
+
+  // 保存订单到本地存储
+  localStorage.setItem("orders", JSON.stringify(orders));//l本地 /S存储 s保存数据 /o订单数据 /J数据格式 /s转为字符串 o订单数组
+  // ======================传送到qq邮箱
+  // ✅ 购物车结算：自动发邮件
+  // ✅ 一键复制订单（替代mailto，客户体验更好）
+  let emailContent = "您收到购物车结算订单！\n------------------------\n";
+  cart.forEach(item => {
+    emailContent += `商品：${item.name}  x${item.count}件  ¥${item.price * item.count}\n`;
+  });
+  emailContent += `------------------------\n客户：${name}\n电话：${phone}\n地址：${address}\n下单时间：${new Date().toLocaleString()}`;
+
+  navigator.clipboard.writeText(emailContent).then(() => {
+    alert("✅ 订单已复制！请粘贴发给商家完成下单");
+  });
+
+  // ✅ 关键修复1：下单成功后，清空购物车
+  localStorage.removeItem("cart");
+
+  // ✅ 关键修复2：正确关闭弹窗
+  let modal = document.querySelector('div[style*="position:fixed"]');
+  if (modal) modal.remove();
+
+  // ✅ 刷新购物车页面（显示空购物车）
+  loadCart();
+
+  // ✅ 跳转到我的订单页（lookorder.html，和导航栏一致）
+  location.href = "lookorder.html";
+}
+loadCart();
+
+// 显示登录状态  //注册登录链接
+function showLoginStatus() {//f定义函数.功能 /s显示 /L登录 /S状态
+  let user = localStorage.getItem("loginUser");//l定义.创建 /u用户名（变量） /l浏览器本地存储 /g取出.获取 /l名字叫（"lo的数据
+  let info = document.getElementById("loginInfo");//i信息.提示文字 /d网页文档 /gd通过id查找元素 /l ID叫（"lo的标签
+  if (user) {//i如果 /u用户名存在
+    info.innerHTML = `欢迎，${user} <a href="javascript:logout()" style="color:#ff0;">退出</a>`;//i刚才找到的.显示信息盒子 /i往盒子里写入HTML内容 /`反引号,包裹一段文字+代码 /${插入登录的用户名（变量）/ht（）点击后执行退出函数 /c颜色 /#黄色
+  } else {//e否则.如果不满足上面的条件
+    info.innerHTML = `<a href="login.html" style="color:#fff;">登录</a> | <a href="register.html" style="color:#fff;">注册</a>`;//f显示信息的盒子 /i写入HTML内容 /`包裹内容+字段代码 /hl跳转到登录页面的链接 /c颜色 /#f白色 /|竖线.分隔符号 /hl跳转到注册页面的链接
+  }
+}
+
+// 退出登录
+function logout() {//lo退出登录 /（l注销 /o退出
+  localStorage.removeItem("loginUser");//lS浏览器本地存储 /r删除 /I数据 /（"lo名为lo的数据
+  alert("已退出登录");//a弹出提示框
+  location.reload();//l当前网页 /r（）刷新.重新加载
+}
+
+// 页面加载就执行
+window.onload = function() {//w浏览器窗口.整个网页 /o加载完成时 /f（）诺名函数.要执行的代码
+  showLoginStatus();//s显示 /l登录 /S状态 /（）执行.调用
+}
+//购物车搜索
+// ================== 购物车搜索（完美修复版）==================
+function searchGoods() {
+  let inputRaw = document.getElementById('searchInput').value.trim().toLowerCase();
+  let items = document.querySelectorAll("#cartWrap .cart-item");
+
+  if (!inputRaw) {
+    items.forEach(item => item.style.display = "block");
+    return;
+  }
+
+  // 支持空格分词：输入 杨 李 能搜到所有带杨或李的商品
+  const keys = inputRaw.split(/\s+/).filter(k => k);
+  items.forEach(item => {
+    const name = item.dataset.name.toLowerCase();
+    const isMatch = keys.some(key => name.includes(key));
+    item.style.display = isMatch ? "block" : "none";
+  });
+}
+
+// 回车搜索
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    searchGoods();
+  }
+});
+//购物车分类搜索 5 
+// ================== 购物车分类筛选 ==================
+const cartCateBtns = document.querySelectorAll('.cate-btn');
+const cartAllItems = document.querySelectorAll('#cartWrap .cart-item');
+//导航栏样式  6  页面加载后再获取商品
+window.addEventListener('load', function() {//w窗口（整个浏览器网页）/a添加 /ELer事件监听 /l加载（网页全部加载完成） /f（）函数（要做的事情.代码）
+cartCateBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    // 切换高亮
+    cartCateBtns.forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    const filter = this.getAttribute('data-filter');
+
+    cartAllItems.forEach(item => {
+      const itemCate = item.dataset.cate;
+      if (filter === 'all' || itemCate === filter) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+});
+});
+</script>
+</body>
+</html>
